@@ -4,17 +4,15 @@
 cyhal_pwm_t pwm_obj;
 int x=100;
 static void button_isr1(void *handler_arg, cyhal_gpio_event_t event1){
-	cyhal_gpio_toggle(CYBSP_USER_LED);
+ cyhal_gpio_toggle(CYBSP_USER_LED);
 }
 cyhal_gpio_callback_data_t cb_data1 = {
 .callback = button_isr1,
 .callback_arg = NULL
 };
 static void button_isr2(void *handler_arg, cyhal_gpio_event_t event2){
- for(int i=0;i<5;i++){
-  cyhal_gpio_write(P9_1, 1);
-  cyhal_system_delay_ms(250);
-  cyhal_gpio_write(P9_1, 0);
+ for(int i=0;i<10;i++){
+  cyhal_gpio_toggle(P9_1);
   cyhal_system_delay_ms(250);
  }
 }

@@ -10,18 +10,8 @@ cyhal_gpio_callback_data_t cb_data1 = {
 .callback = button_isr1,
 .callback_arg = NULL
 };
-static void button_isr2(void *handler_arg, cyhal_gpio_event_t event2){
- for(int i=0;i<10;i++){
-  cyhal_gpio_toggle(P9_1);
-  cyhal_system_delay_ms(250);
- }
-}
-cyhal_gpio_callback_data_t cb_data2 = {
-.callback = button_isr2,
-.callback_arg = NULL
-};
 static void button_isr3(void *handler_arg, cyhal_gpio_event_t event3){
- cyhal_system_delay_ms(250);
+ //cyhal_system_delay_ms(250);
  x-=20;
  cyhal_pwm_set_duty_cycle(&pwm_obj,x,5000);
   if(x==0){
@@ -47,10 +37,8 @@ int main(void)
     cyhal_gpio_init(CYBSP_USER_BTN, CYHAL_GPIO_DIR_INPUT,CYHAL_GPIO_DRIVE_PULLUP, CYBSP_BTN_OFF);
     cyhal_gpio_init(P9_4, CYHAL_GPIO_DIR_INPUT,CYHAL_GPIO_DRIVE_PULLUP, 1);
     cyhal_gpio_init(P9_7, CYHAL_GPIO_DIR_INPUT,CYHAL_GPIO_DRIVE_PULLUP, 1);
-    cyhal_gpio_register_callback(CYBSP_USER_BTN, &cb_data1);
+    cyhal_gpio_register_callback(CYBSP_USER_BTN,&cb_data1);
     cyhal_gpio_enable_event(CYBSP_USER_BTN, CYHAL_GPIO_IRQ_FALL,1, true);
-    cyhal_gpio_register_callback(P9_4, &cb_data2);
-    cyhal_gpio_enable_event(P9_4, CYHAL_GPIO_IRQ_FALL,2, true);
     cyhal_gpio_register_callback(P9_7, &cb_data3);
     cyhal_gpio_enable_event(P9_7, CYHAL_GPIO_IRQ_FALL,3, true);
     cyhal_pwm_init(&pwm_obj, P9_2, NULL);
@@ -58,6 +46,12 @@ int main(void)
     cyhal_pwm_start(&pwm_obj);
     for (;;)
     {
+     if(cyhal_gpio_read(P9_4)==0){
+      for(int i=0;i<10;i++){
+       cyhal_gpio_toggle(P9_1);
+       cyhal_system_delay_ms(250);
+      }
+     }
     }
 }
 
